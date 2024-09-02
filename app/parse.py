@@ -90,7 +90,11 @@ def load_whole_page(driver: webdriver.Chrome) -> None:
                     (By.CSS_SELECTOR, ".thumbnail")
                 )
             )
-        except (NoSuchElementException, TimeoutException, ElementNotInteractableException):
+        except (
+                NoSuchElementException,
+                TimeoutException,
+                ElementNotInteractableException
+        ):
             break
 
 
