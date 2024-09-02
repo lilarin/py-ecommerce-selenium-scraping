@@ -12,7 +12,7 @@ from selenium.common import (
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions
 
 BASE_URL = "https://webscraper.io/"
 HOME_URL = urljoin(BASE_URL, "test-sites/e-commerce/more/")
@@ -67,7 +67,7 @@ def parse_product_page(page_soup: BeautifulSoup) -> list[Product]:
 def accept_cookies(driver: webdriver.Chrome) -> None:
     try:
         cookie_button = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located(
+            expected_conditions.presence_of_element_located(
                 (By.CLASS_NAME, "acceptCookies")
             )
         )
@@ -80,13 +80,13 @@ def load_whole_page(driver: webdriver.Chrome) -> None:
     while True:
         try:
             button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable(
+                expected_conditions.element_to_be_clickable(
                     (By.CSS_SELECTOR, "a.ecomerce-items-scroll-more")
                 )
             )
             button.click()
             WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
+                expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR, ".thumbnail")
                 )
             )
