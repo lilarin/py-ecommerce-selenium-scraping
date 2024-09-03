@@ -79,13 +79,13 @@ def accept_cookies(driver: webdriver.Chrome) -> None:
 def load_whole_page(driver: webdriver.Chrome) -> None:
     while True:
         try:
-            button = WebDriverWait(driver, 10).until(
+            button = WebDriverWait(driver, 3).until(
                 expected_conditions.element_to_be_clickable(
                     (By.CSS_SELECTOR, "a.ecomerce-items-scroll-more")
                 )
             )
             button.click()
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 3).until(
                 expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR, ".thumbnail")
                 )
@@ -100,13 +100,11 @@ def load_whole_page(driver: webdriver.Chrome) -> None:
 
 def scrape_products(
         driver: webdriver.Chrome,
-        url: str,
-        pagination: bool = False
+        url: str
 ) -> list[Product]:
     driver.get(url)
 
-    if pagination:
-        load_whole_page(driver)
+    load_whole_page(driver)
 
     page_soup = BeautifulSoup(driver.page_source, "html.parser")
     return parse_product_page(page_soup)
@@ -151,8 +149,7 @@ def get_all_products() -> None:
         accept_cookies(driver)
 
         for category, url in CATEGORIES.items():
-            pagination = category in ["laptops", "tablets", "touch"]
-            products = scrape_products(driver, url, pagination=pagination)
+            products = scrape_products(driver, url)
             write_products_to_csv(products, f"{category}.csv")
     finally:
         driver.quit()
